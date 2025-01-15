@@ -1,0 +1,7 @@
+users:
+  - name: david
+    job: developer
+  - name: maria
+    job: manager
+  - name: drax
+    job: developer
