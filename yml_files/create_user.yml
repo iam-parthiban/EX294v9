@@ -1,0 +1,31 @@
+---
+- name: creating users
+  hosts: all
+  vars_files:
+    - vault.yml
+    - user_list.yml
+  tasks:
+    - name: creating groups
+      group:
+        name: "{{ item }}"
+        state: present
+      loop: 
+        - devops
+        - opsmgr
+    - name: adding users in devops groups
+      user: 
+        name: "{{ item.name }}"
+        state: present
+        groups: devops
+        password: "{{ dev_pass | password_hash ('sha512') }}"
+      loop: "{{ users }}"
+      when: item.job == "developer" and (inventory_hostname in groups['dev'] or inventory_hostname in groups['balancers'])
+
+    - name: adding users in opsmgr groups
+      user: 
+        name: "{{ item.name }}"
+        state: present
+        groups: opsmgr
+        password: "{{ mgr_pass | password_hash ('sha512') }}"
+      loop: "{{ users }}"
+      when: item.job == "manager" and (inventory_hostname in groups['prod'])
