@@ -1,0 +1,31 @@
+---
+- name: create lvm storage
+  hosts: all
+  ignore_errors: true
+  tasks:
+    - name: create a lvm with 1500m size
+      community.general.lvol:
+        lv: data
+        vg: research
+        size: 1500M
+        state: present
+    - name: print a msg
+      ansible.builtin.debug:
+        msg: "vg not found"
+      when: ansible_lvm.vgs.research is not defined
+    - name: print a msg
+      ansible.builtin.debug:
+        msg: "insufficent size of vg"
+      when: ansible_lvm.vgs.research.size_g < 1.5
+    - name: create a lv with 800M size
+      community.general.lvol:
+        lv: data
+        vg: research
+        size: 800M
+        state: present
+      when: ansible_lvm.vgs.research.size_g < 1.5
+    - name: formart with filesystem
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/research/data
+      when: ansible_lvm.vgs.research.size_g < 1.5
