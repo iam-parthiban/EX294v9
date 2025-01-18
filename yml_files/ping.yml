@@ -1,0 +1,7 @@
+---
+- name: Check connectivity to all servers
+  hosts: all
+  tasks:
+    - name: Ping all servers
+      ansible.builtin.ping:
+        data: "Connectivity test successful - {{ inventory_hostname }}"

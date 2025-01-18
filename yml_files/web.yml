@@ -1,0 +1,40 @@
+---
+- name: configure /webdev/index.html
+  hosts: dev
+  tasks:
+    - name: start the services
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop:
+        - httpd
+        - firewalld
+
+    - name: create folder called /webdev
+      ansible.builtin.file:
+        path: /webdev
+        state: directory
+        group: apache
+        mode: '2775'
+        setype: httpd_sys_content_t
+
+    - name: create syslink of /webdev
+      ansible.builtin.file:
+        src: /webdev
+        dest: /var/www/html/webdev
+        state: link
+        setype: httpd_sys_content_t
+
+    - name: create index.html file
+      ansible.builtin.copy:
+        content: "Development\n"
+        dest: /webdev/index.html
+        setype: httpd_sys_content_t
+
+    - name: allow http on firewalld
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true

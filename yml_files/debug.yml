@@ -1,0 +1,7 @@
+---
+- name:
+  hosts: localhost
+  tasks:
+    - name: print ipv4
+      debug:
+        vars: "{{ ansible_all_default_ipv4.address }}"

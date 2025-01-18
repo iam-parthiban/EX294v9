@@ -1,0 +1,27 @@
+---
+- name: generating hwrepot of all nodes
+  hosts: dev
+  tasks:
+    - name: download the hwreport.empty file
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/iam-parthiban/EX294v9/refs/heads/main/templates/hwreport.empty
+        dest: /root/hwreport.txt
+
+    - name: generate hwreport
+      ansible.builtin.replace:
+        path: /root/hwreport.txt
+        regexp: "{{ item.src }}"
+        replace: "{{ item.dest }}"
+      loop:
+        - src: "hostname"
+          dest: "{{ ansible_hostname }}"
+        - src: "memory"
+          dest: "{{ ansible_memtotal_mb }}"
+        - src: "biosversion"
+          dest: "{{ ansible_bios_version }}"
+        - src: "vdasize"
+          dest: "{{ ansible_devices.sda.size | default('NONE') }}"
+        - src: "vdbsize"
+          dest: "{{ ansible_devices.sdb.size | default('NONE') }}"
+        - src: "vdcsize"
+          dest: "{{ ansible_devices.sdc.size | default('NONE') }}"

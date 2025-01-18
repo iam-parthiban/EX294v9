@@ -1,0 +1,10 @@
+---
+- name: install phphello
+  hosts: webservers
+  roles:
+    - phphello
+
+- name: install balancer
+  hosts: balancers
+  roles:
+    - balancer

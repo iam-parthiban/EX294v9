@@ -1,0 +1,21 @@
+---
+- name: configuring repositories
+  hosts: dev
+  tasks:
+    - name: baseos repo
+      ansible.builtin.yum_repository:
+        name: 'baseos'
+        description: 'RH294 Description'
+        baseurl: http://content.example.com/rhel9.0/x86_64/dvd/BaseOS
+        gpgcheck: true
+        gpgkey: http://content.example.com/rhel9.0/x86_64/dvd/RPM-GPG-KEY-redhat-release
+        enabled: true
+
+    - name: baseos repo
+      ansible.builtin.yum_repository:
+        name: 'appstream'
+        description: 'RH294 Description'
+        baseurl: http://content.example.com/rhel9.0/x86_64/dvd/AppStream
+        gpgcheck: true
+        gpgkey: http://content.example.com/rhel9.0/x86_64/dvd/RPM-GPG-KEY-redhat-release
+        enabled: true

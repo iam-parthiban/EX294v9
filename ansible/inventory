@@ -1,0 +1,13 @@
+#hosts
+
+[dev]
+node1.example.com
+
+[balancers]
+node2.example.com
+
+[prod]
+node3.example.com
+
+[webservers:children]
+prod

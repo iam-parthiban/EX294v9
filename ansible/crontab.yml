@@ -1,0 +1,11 @@
+---
+- name: create cronjob
+  hosts: all
+  tasks:
+    - name: cronjob for logger
+      ansible.builtin.cron:
+        name: Logger for student
+        user: student
+        minute: "*/2"
+        job: logger "EX294 in progress"
+        state: present

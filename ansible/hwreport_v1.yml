@@ -1,0 +1,27 @@
+---
+- name: generating hwreport
+  hosts: prod
+  tasks:
+    - name: downloading hwreport.empty template.
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/iam-parthiban/EX294v9/refs/heads/main/templates/hwreport.empty
+        dest: /root/hwreport.txt
+
+    - name: generating the hwreport on hwreport.txt
+      ansible.builtin.replace:
+        path: /root/hwreport.txt
+        regexp: "{{ item.src }}"
+        replace:  "{{ item.dest }}"
+      loop:
+        - src: "hostname"
+          dest: "{{ ansible_facts ['hostname'] }}"
+        - src: "memory"
+          dest: "{{ ansible_facts ['memtotal_mb'] | default ('NONE') }}"
+        - src: "biosversion"
+          dest: "{{ ansible_facts ['bios_version'] | default ('NONE') }}"
+        - src: "vdasize"
+          dest: "{{ ansible_facts ['devices'] ['sda'] ['size'] | default ('NONE') }}"
+        - src: "vdbsize"
+          dest: "{{ ansible_facts ['devices'] ['sdb'] ['size'] | default ('NONE') }}"
+        - src: "vdcsize"
+          dest: "{{ ansible_facts ['devices'] ['sdc'] ['size'] | default ('NONE') }}"

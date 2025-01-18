@@ -1,0 +1,30 @@
+---
+# tasks file for apache
+- name: install httpd & firewalld
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+   - httpd
+   - firewalld
+    
+- name: start and enable the services 
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+      - httpd
+      - firewalld
+    
+- name: add http rule on firewall
+  ansible.posix.firewalld:
+    service: http
+    state: enabled
+    immediate: true
+    permanent: true
+    
+- name: create template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
