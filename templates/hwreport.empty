@@ -3,4 +3,4 @@
 - BIOS version = biosversion
 - Size of disk device vda = vdasize
 - Size of disk device vdb = vdbsize
-- Size of disk device vdb = vdcsize
+- Size of disk device vdc = vdcsize
