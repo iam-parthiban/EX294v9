@@ -1,31 +1,35 @@
 ---
-- name: create lvm storage
+- name: creating lvm partition
   hosts: all
-  ignore_errors: true
-  tasks:
-    - name: create a lvm with 1500m size
-      community.general.lvol:
-        lv: data
-        vg: research
-        size: 1500M
-        state: present
-    - name: print a msg
+  tasks: 
+    - name: if volume is not existed
       ansible.builtin.debug:
         msg: "vg not found"
       when: ansible_lvm.vgs.research is not defined
-    - name: print a msg
-      ansible.builtin.debug:
-        msg: "insufficent size of vg"
-      when: ansible_lvm.vgs.research.size_g < 1.5
-    - name: create a lv with 800M size
+      
+    - name: Create a lvm of 1500m
       community.general.lvol:
-        lv: data
         vg: research
-        size: 800M
-        state: present
-      when: ansible_lvm.vgs.research.size_g < 1.5
-    - name: formart with filesystem
+        lv: data
+        size: '1500'
+		  state: present
+      when: ansible_lvm.vgs.research is defined and ansible_lvm.vgs.research.size_g > "1.5"
+      
+    - name: if 1500m volume is not available
+      ansible.builtin.debug:
+        msg: "Insufficient size of vg"
+      when: ansible_lvm.vgs.research is defined and ansible_lvm.vgs.research.size_g < "1.5"
+      
+    - name: Create a lv of 800m
+      community.general.lvol:
+        vg: research
+        lv: data
+        size: '800'
+		  state: present
+      when: ansible_lvm.vgs.research is defined and ansible_lvm.vgs.research.size_g < "1.5"
+      
+    - name: create a file system with xfs format
       community.general.filesystem:
         fstype: ext4
         dev: /dev/research/data
-      when: ansible_lvm.vgs.research.size_g < 1.5
+      when: ansible_lvm.vgs.research is defined
