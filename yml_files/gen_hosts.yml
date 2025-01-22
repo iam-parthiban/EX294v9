@@ -5,5 +5,5 @@
     - name: generate hosts file
       ansible.builtin.template:
         src: hosts.j2
-        dest: /etc/hosts_v1
+        dest: /etc/hosts
       when: inventory_hostname in groups ['dev']
