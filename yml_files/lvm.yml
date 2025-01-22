@@ -12,7 +12,7 @@
         vg: research
         lv: data
         size: '1500'
-		  state: present
+	state: present
       when: ansible_lvm.vgs.research is defined and ansible_lvm.vgs.research.size_g > "1.5"
       
     - name: if 1500m volume is not available
@@ -25,7 +25,7 @@
         vg: research
         lv: data
         size: '800'
-		  state: present
+	state: present
       when: ansible_lvm.vgs.research is defined and ansible_lvm.vgs.research.size_g < "1.5"
       
     - name: create a file system with xfs format
